@@ -1,0 +1,130 @@
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  color: white;
+  background-color: #111827;
+}
+
+.page-container {
+  display: flex;
+  flex-direction: column;
+ 
+}
+.navigation {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+/*
+.navigation {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.8rem 1.5rem;
+}*/
+
+.logo {
+  height: 60px;
+}
+
+.navigation {
+  /*background-color: #ffffff;*/
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.logo-section {
+  flex: initial;
+}
+
+.authentication-buttons {
+  display: flex;
+  flex-direction: row;
+  column-gap: 10px;
+}
+.login-button,
+.register-button {
+  
+  border-radius: 10px;
+  border-width: 2px;
+  cursor: pointer;
+}
+
+.login-button {
+  padding: 10px 20px 10px 20px;
+  background-color: rgb(33, 110, 255);
+  border-color: rgb(33, 110, 255);
+  border-style: solid;
+  color: white;
+}
+
+.register-button {
+  padding: 10px 30px 10px 30px;
+  padding: 9px;
+  background-color: white;
+  color: black;
+  border-color: white;
+  border-style: solid;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  row-gap: 30px;
+}
+
+.host-section,
+.join-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  row-gap: 25px;
+}
+
+.host-section h1,
+.join-section h1 {
+  margin-bottom: 0px;
+}
+
+
+
+.prompt-section,
+.signup-or-login-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.link {
+  color: rgb(33, 110, 255);
+  cursor: pointer;
+}
+
+
+.join-room-section {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  column-gap: 10px;
+}
+
+.room-code-input {
+  border: 2px solid #1b263d;
+  border-radius: 10px;
+  font-size: 20px;
+  padding: 5px;
+  background-color: #273657;
+  color: white;
+}
+
+.join-button {
+  font-size: 20px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+  border-radius: 10px;
+  border: 2px solid rgb(255, 255, 255);
+  background-color: white;
+}
