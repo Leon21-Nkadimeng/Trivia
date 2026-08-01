@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './pages/home';
 import CreateTrivia from './pages/new-trivia';
 //import ManageTrivia from './pages/ManageTrivia';
-//import PlayTrivia from './pages/PlayTrivia';
+import PlayTrivia from './pages/play-trivia';
 
 function App() {
   return (
@@ -12,7 +12,9 @@ function App() {
         <Route path='/new-trivia' element={<CreateTrivia />} />
         {/*
         <Route path='/manage/:adminToken' element={<ManageTrivia />} />
-        <Route path='/play/:roomCode' element={<PlayTrivia />} />*/}
+        */}
+        <Route path='/play/:roomCode' element={<PlayTrivia />} />
+
       </Routes>
     </BrowserRouter>
   );

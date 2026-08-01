@@ -36,7 +36,7 @@ function App() {
           </div>
           <div className='join-room-section'>
             <input type='text' className='room-code-input' placeholder='Enter room code' />
-            <button className='join-button'>Join</button>
+            <button className='join-button' onClick={() =>  window.location.href='/play/123'}>Join</button>
           </div>
         </div>
         <div className=''>
