@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Home from './home';
-import CreateTrivia from './new-trivia';
+import Home from './pages/home';
+import CreateTrivia from './pages/new-trivia';
 //import ManageTrivia from './pages/ManageTrivia';
 //import PlayTrivia from './pages/PlayTrivia';
 

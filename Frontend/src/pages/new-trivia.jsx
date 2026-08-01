@@ -1,5 +1,5 @@
 import { useState } from "react";
-import './assets/styles/create-trivia.css'
+import '../assets/styles/create-trivia.css'
 export default function CreateTrivia() {
   const [hostEmail, setHostEmail] = useState('');
   const [triviaTitle, setTriviaTitle] = useState('');
@@ -76,6 +76,10 @@ export default function CreateTrivia() {
     setQuestions(updated);
   }
 
+  function submitTrivia() {
+    
+  }
+
   return (
     <div className='create-trivia-form'>
       <h2>Create a trivia</h2>
@@ -139,7 +143,7 @@ export default function CreateTrivia() {
         + Add another question
       </button>
 
-      <button type='button' className='submit-btn'>
+      <button type='button' className='submit-btn' onClick={() => submitTrivia()}>
         Create trivia
       </button>
     </div>
