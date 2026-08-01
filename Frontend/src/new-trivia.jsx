@@ -12,14 +12,6 @@ export default function CreateTrivia() {
       {
         text: '',
         isCorrect: false
-      },
-      {
-        text: '',
-        isCorrect: false
-      },
-      {
-        text: '',
-        isCorrect: false
       }]
   }]);
   function output(obj) {
@@ -32,14 +24,6 @@ export default function CreateTrivia() {
     const newQuestion = {
       questionText: '', 
       options: [{
-        text: '',
-        isCorrect: false
-      },
-      {
-        text: '',
-        isCorrect: false
-      },
-      {
         text: '',
         isCorrect: false
       },
@@ -71,8 +55,24 @@ export default function CreateTrivia() {
 
   function setCorrectOption(qIndex, oIndex) {
     const updated = [...questions];
-    updated[qIndex].options[oIndex].isCorrect = true;
+    updated[qIndex].options[oIndex].isCorrect = !updated[qIndex].options[oIndex].isCorrect;
     output(updated);
+    setQuestions(updated);
+  }
+
+  function addQuestionOption(qIndex) {
+    const updated = [...questions];
+    updated[qIndex].options.push({
+        text: '',
+        isCorrect: false
+      });
+    output(updated);
+      setQuestions(updated);
+  }
+
+  function removeOption(qIndex, oIndex) {
+    const updated = [...questions];
+    updated[qIndex].options = updated[qIndex].options.filter((_, i) => i !== oIndex);
     setQuestions(updated);
   }
 
@@ -110,13 +110,13 @@ export default function CreateTrivia() {
             type='text'
             placeholder='Question text'
             value={q.questionText}
-            onChange={(e) => updateQuestionText(qIndex, e.target.value)}
+            onChange={(e) => updateQuestionText(index, e.target.value)}
           />
 
           {q.options.map((opt, i) => (
             <div className='option-row' key={`${i}`}>
               <input 
-                type="radio"
+                type="checkbox"
                 name={`correct-${index}`}
                 checked={opt.isCorrect}
                 onChange={() => setCorrectOption(index, i)}
@@ -127,8 +127,11 @@ export default function CreateTrivia() {
                 value={opt.text}
                 onChange={(e) => updateOptions(index, i, e.target.value)}
               />
+              {q.options.length > 2 &&
+              (<button type="button" onClick={() => removeOption(index, i)}>Remove</button>)}
             </div>
           ))}
+          <button type="button" onClick={() => addQuestionOption(index)}>Add Question Option</button>
         </div>
       ))}
 
