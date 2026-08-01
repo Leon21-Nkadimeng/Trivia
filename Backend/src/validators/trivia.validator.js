@@ -11,7 +11,7 @@ function validateTriviaInfo(req, res, next) {
     }
 
     // validate email format
-    const emailRegex = "^([a-zA-Z0-9!\.*&#+=_\-])+@([a-zA-Z0-9])[\.a-zA-Z0-9]+$";
+    const emailRegex = "^[a-zA-Z0-9!\.*&#+=_\-]+@([a-zA-Z0-9])[\.a-zA-Z0-9]*$";
     const regexContructor = new RegExp(emailRegex);
     if(!regexContructor.test(requestBody.Email))
       return res.status(400).json({message:"Invalid email address format"});

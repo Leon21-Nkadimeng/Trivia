@@ -1,10 +1,13 @@
 import { useState } from "react";
 import '../assets/styles/create-trivia.css'
+
+import { submitTrivia } from "../services/trivia.service";
 export default function CreateTrivia() {
+  const [adminName, setAdminName] = useState('');
   const [hostEmail, setHostEmail] = useState('');
   const [triviaTitle, setTriviaTitle] = useState('');
   const [questions, setQuestions] = useState([{
-    questionText: '', 
+    text: '', 
     options: [{
         text: '',
         isCorrect: false
@@ -22,7 +25,7 @@ export default function CreateTrivia() {
   function addQuestion() {
     
     const newQuestion = {
-      questionText: '', 
+      text: '', 
       options: [{
         text: '',
         isCorrect: false
@@ -42,7 +45,7 @@ export default function CreateTrivia() {
 
   function updateQuestionText(index, text) {
     const updated = [...questions];
-    updated[index].questionText = text;
+    updated[index].text = text;
     setQuestions(updated);
   }
 
@@ -76,14 +79,60 @@ export default function CreateTrivia() {
     setQuestions(updated);
   }
 
-  function submitTrivia() {
+  async function submitTriviaToAPI() {
+    if(!adminName){
+      alert('Admin name is required');
+      return;
+    }
+
+    if(!hostEmail){
+      alert('Host email is required');
+      return;
+    }
+
+    if(!triviaTitle){
+      alert('Trivia title is required');
+      return;
+    }
+
+    if(!questions || questions.length === 0) {
+      alert('You need at least one question')
+      return;
+    }
+
+    if(!questions[0].options || questions[0].options.length < 2) {
+      alert('You need at least two options');
+      return;
+    }
+
+    const trivia = {
+      AdminName: adminName,
+      triviaTitle: triviaTitle,
+      Email: hostEmail,
+      questions: questions
+    }
     
+
+    try {
+      const data = await submitTrivia(trivia);
+      alert(data.message);
+    } catch (error) {
+      
+    }
   }
 
   return (
     <div className='create-trivia-form'>
       <h2>Create a trivia</h2>
       <p className='form-subtitle'>Add your details and at least one question</p>
+
+      <label>Your Name</label>
+      <input 
+        type="text"
+        placeholder="e.g., Leon"
+        value={adminName}
+        onChange={(e) => setAdminName(e.target.value)}
+      />
 
       <label>Your Email</label>
       <input 
@@ -113,7 +162,7 @@ export default function CreateTrivia() {
           <input
             type='text'
             placeholder='Question text'
-            value={q.questionText}
+            value={q.text}
             onChange={(e) => updateQuestionText(index, e.target.value)}
           />
 
@@ -143,7 +192,7 @@ export default function CreateTrivia() {
         + Add another question
       </button>
 
-      <button type='button' className='submit-btn' onClick={() => submitTrivia()}>
+      <button type='button' className='submit-btn' onClick={submitTriviaToAPI}>
         Create trivia
       </button>
     </div>
