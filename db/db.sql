@@ -1,5 +1,6 @@
 CREATE DATABASE IF NOT EXISTS Trivia_DB;
 USE Trivia_DB;
+
 -- show tables
 /*
 create table Hosts (
@@ -11,9 +12,11 @@ create table Hosts (
     AccountStatus ENUM('Active', 'Inactive') DEFAULT 'Active'
 );
 */
--- drop table Trivia, Question, Question_Option
+-- drop table Question_Option, Question, Trivia
 CREATE TABLE Trivia (
 	ID 	VARCHAR(200) NOT NULL UNIQUE,
+    TriviaTitle VARCHAR(200) NOT NULL,
+    AdminName VARCHAR(200) NOT NULL,
     Email VARCHAR(200) NOT NULL,
 	AdminToken VARCHAR(100) NOT NULL,
     RoomCode VARCHAR(100) NOT NULL UNIQUE,
@@ -43,6 +46,9 @@ CREATE TABLE Question_Option (
     FOREIGN KEY(QuestionID) REFERENCES Question(ID),
     PRIMARY KEY(ID)
 );
+
+
+
 
 
 
