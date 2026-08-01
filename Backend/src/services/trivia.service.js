@@ -7,7 +7,7 @@ async function addTrivia(trivia) {
   try {
     connection.beginTransaction();
 
-    const triviaSQL = 'INSERT INTO Trivia (ID, TriviaTitle, AdminName, Email, AdminToken, RoomCode) VALUES (?, ?, ?, ?, ?, ?)';
+    const triviaSQL = 'INSERT INTO Trivia (ID, TriviaTitle, AdminName, Email, AdminToken, RoomCode, Status) VALUES (?, ?, ?, ?, ?, ?, "Open")';
 
     // add a trivia
     await connection.query(triviaSQL, [trivia.triviaID, trivia.triviaTitle, trivia.AdminName, trivia.Email, trivia.AdminToken, trivia.RoomCode]);
