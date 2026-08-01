@@ -18,8 +18,9 @@ CREATE TABLE Trivia (
 	AdminToken VARCHAR(100) NOT NULL,
     RoomCode VARCHAR(100) NOT NULL UNIQUE,
     DateCreated TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    DateClosed DATETIME NOT NULL,
-    Status ENUM('Open', 'Closed'),
+    DateStarted TIMESTAMP NULL,
+    DateClosed DATETIME NULL,
+    Status ENUM('Open', 'Closed') NOT NULL DEFAULT 'Closed',
     
     PRIMARY KEY(ID)
 );
