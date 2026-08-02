@@ -1,3 +1,5 @@
+import "../assets/styles/play-trivia.css";
+
 import { useEffect, useState } from "react"
 import { getTrivia } from "../services/trivia.service";
 import { useNavigate, useParams } from "react-router-dom";
@@ -111,19 +113,22 @@ export default function PlayTrivia() {
 
   if(!entryName) {
     return (
-    <div>
-      <input type="text" placeholder="Display name" onChange={(e) => setEntryNameTemp(e.target.value)} />
-      <button onClick={() => entryNameTemp ? setEntryName(entryNameTemp) : alert("Please enter your display name")}>Start</button>
+    <div className="entry-screen">
+      <input type="text" placeholder="Display name" onChange={(e) => setEntryNameTemp(e.target.value)} className="entry-name-screen" />
+      <button onClick={() => entryNameTemp ? setEntryName(entryNameTemp) : alert("Please enter your display name")} className="start-button">Start</button>
     </div>)
   }
 
   if(!questions || questions.length === 0) return null;
 
   return (
-    <div>
-      <div>{trivia.TriviaTitle} by {trivia.AdminName}</div>
-      <div>Question {currentQuestionIndex + 1} / {questions.length}</div>
+    <div className="container">
+    <div className="trivia-card">
+      <div className="title-section"><h2>{trivia.TriviaTitle} by {trivia.AdminName}</h2></div>
+      <hr />
+      <div className="question-section"><span>Question {currentQuestionIndex + 1} / {questions.length}</span></div>
       <div>{questions[currentQuestionIndex].QuestionText}</div>
+      <div className="questions-section">
       {questions[currentQuestionIndex].options.map((option, i) => (
         <div key={option.ID}>
           {questions[currentQuestionIndex].multipleAnswers ?
@@ -133,21 +138,22 @@ export default function PlayTrivia() {
         </div>
       ))
       }
-      <div>
+      </div>
+      <div className="game-controls-section">
         { currentQuestionIndex < questions.length - 1 && numSelected > 0 &&
-        <button onClick={() => goToNextQuestion()}>Next Question</button>
+        <button onClick={() => goToNextQuestion()} className="next-button">Next Question</button>
         }
 
         {
           currentQuestionIndex > 0 &&
-          <button onClick={() => goToPrevQuestion()}>Previous Question</button>
+          <button onClick={() => goToPrevQuestion()} className="prev-button">Previous Question</button>
         }
         {
           currentQuestionIndex === questions.length - 1 && numSelected > 0 &&
-          <button onClick={async () => await submitAttemptToAPI(startDate, trivia.ID, entryName, startDate, questions)}>Submit</button>
+          <button onClick={async () => await submitAttemptToAPI(startDate, trivia.ID, entryName, startDate, questions)} className="submit-button">Submit</button>
         }
       </div>
     </div>
-    
+    </div>
   )
 }

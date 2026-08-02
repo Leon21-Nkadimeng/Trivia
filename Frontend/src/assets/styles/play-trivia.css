@@ -1,0 +1,74 @@
+
+
+.entry-screen {
+  padding-top: 200px;
+  display: flex;
+  flex:1;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  row-gap: 10px;
+
+}
+
+.entry-screen input {
+  font-size: 30px;
+  padding: 10px;
+  border-radius: 10px;
+  border: solid gray 2px;
+}
+
+.entry-screen button {
+  font-size: 30px;
+  padding: 15px 25px 15px 25px;
+  border-radius: 10px;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.entry-screen button:active {
+  margin-bottom: 5px;
+  margin-top: -5px;
+}
+
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+}
+
+.trivia-card {
+  display: flex;
+  flex-direction: column;
+  row-gap: 10px;
+  background-color: black;
+  padding: 50px;
+  border-radius: 20px;
+}
+
+.trivia-card hr {
+  width: 100%;
+}
+
+
+
+.question-section,.title-section {
+  display: flex;
+}
+
+.title-section h2 {
+  margin: 0px;
+}
+
+.questions-section {
+  display: flex;
+  flex-direction: column;
+  row-gap: 8px;
+}
+
+.game-controls-section {
+  
+}
+
