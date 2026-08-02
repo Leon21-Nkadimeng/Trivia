@@ -67,4 +67,37 @@ async function getQuestionOptions(questionID) {
   return options;
 }
 
-module.exports= {addTrivia, getTriviaQuestions, getTriviaByRoomCode, getQuestionOptions, getTriviaAvailableByRoomCode};
+async function addAttempt(attempt) {
+  // get a connection from the pool
+  const connection = await db.getConnection();
+
+  try {
+    // begin transaction
+    await connection.beginTransaction();
+
+
+    const attemptSQL = 'INSERT INTO Trivia_Attempt (ID, TriviaID, AttemptName, DateStarted, DateSubmitted) VALUES (?, ?, ?, ?, NOW())';
+    await connection.query(attemptSQL, [attempt.ID, attempt.TriviaID, attempt.AttemptName, attempt.DateStarted]);
+
+    const selectedOptionSQL = 'INSERT INTO Selected_Option (AttemptID, OptionID) VALUES (?, ?)';
+    const answers = attempt.answers;
+    for(let i = 0; i < answers.length; i++) {
+      await connection.query(selectedOptionSQL, [attempt.ID, answers[i]]);
+    }
+
+    // commit changes to the database
+    await connection.commit();
+  } catch (error) {
+    throw error;
+    await connection.rollback();
+  } finally {
+    connection.release();
+  }
+}
+
+async function getTriviaByTriviaID(triviaID) {
+  const [trivia] = await db.query('SELECT ID, Status FROM Trivia WHERE ID = ?', [triviaID]);
+  return trivia;
+}
+
+module.exports= {addTrivia, getTriviaQuestions, getTriviaByRoomCode, getQuestionOptions, getTriviaAvailableByRoomCode, addAttempt, getTriviaByTriviaID};

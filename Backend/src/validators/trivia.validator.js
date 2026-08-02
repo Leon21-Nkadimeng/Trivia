@@ -1,3 +1,4 @@
+const triviaService = require("../services/trivia.service");
 function validateTriviaInfo(req, res, next) {
   try {
     // check if all fields are provided
@@ -52,4 +53,47 @@ function validateTriviaInfo(req, res, next) {
 }
 
 
-module.exports = {validateTriviaInfo};
+async function validateAttemptInfo(req, res, next) {
+
+  try {
+    // check if all fields are provided
+    if(!req.body)
+      return res.status(400).json({message:"No information about trivia is provided."});
+
+    const requestBody = req.body;
+
+    if(!requestBody.DateStarted || !requestBody.TriviaID || !requestBody.AttemptName || !requestBody.questions || requestBody.questions.length === 0) {
+      return res.status(400).json({message:"Missing trivia information."});
+    }
+
+    // validate the trivia id
+    const data = await triviaService.getTriviaByTriviaID(requestBody.TriviaID);
+
+    if(!data || data.length === 0) {
+      return res.status(204).json({message:"Trivia not found"});
+    }
+
+    if(data[0].Status === 'Closed')
+      return res.status(400).json({message:"Cannot participate in trivia. Trivia is closed."});
+
+    // validate the questions and options
+    const questions = requestBody.questions;
+    for(let q = 0; q < questions.length; q++) {
+      const options = questions[q].options;
+      if(!options || options.length === 0)
+        return res.status(400).json({message:"Invalid questions format"});
+      const correctOption = options.find(o => o.selected === true);
+      if(!correctOption)
+        return res.status(400).json({message:`No selected option is found on question ${q + 1}`})
+    }
+
+
+    next();
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({message:error.message})
+  }
+}
+
+
+module.exports = {validateTriviaInfo, validateAttemptInfo};

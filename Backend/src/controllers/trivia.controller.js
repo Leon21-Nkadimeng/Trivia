@@ -82,5 +82,32 @@ async function getTrivia(req, res) {
   
 }
 
+async function addAttempt(req, res) {
+  try {
+    const attempt = req.body;
+// todo: validate trivia id
+    const answers = [];
+   // console.log(attempt)
+    attempt.questions.forEach(question => {
+      question.options.forEach(option => {
+        if(option.selected)
+          answers.push(option.ID);
+      })
+    });
+    
 
-module.exports = {addTrivia, getTrivia};
+    await triviaService.addAttempt({
+      ...attempt, 
+      ID: crypto.randomUUID(),
+      answers
+    });
+
+    return res.status(201).json({message:"Trivia attempt added successfully"});
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({message: error.message});    
+  }
+}
+
+
+module.exports = {addTrivia, getTrivia, addAttempt};

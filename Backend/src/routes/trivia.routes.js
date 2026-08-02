@@ -11,4 +11,6 @@ router.route("/create").post(triviaValidator.validateTriviaInfo, triviaControlle
 
 router.route("/get/trivia/:RoomCode").get(triviaController.getTrivia);
 
+router.route("/save/attempt").post(triviaValidator.validateAttemptInfo, triviaController.addAttempt);
+
 module.exports = router;
