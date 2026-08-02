@@ -110,4 +110,19 @@ async function addAttempt(req, res) {
 }
 
 
-module.exports = {addTrivia, getTrivia, addAttempt};
+async function getTriviaByAdminToken(req, res) {
+  try {
+    const {adminToken} = req.params;
+
+    const trivia = await triviaService.getTriviaByAdminToken(adminToken);
+    if(trivia.length === 0)
+      return res.status(404).json({message:"Trivia not found"});
+    return res.status(200).json(trivia[0]);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({message: error.message});    
+  }
+}
+
+
+module.exports = {addTrivia, getTrivia, addAttempt, getTriviaByAdminToken};

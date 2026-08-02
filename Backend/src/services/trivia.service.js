@@ -42,6 +42,11 @@ async function getTriviaByRoomCode(roomCode) {
   return trivia;
 }
 
+async function getTriviaByAdminToken(adminToken) {
+  const [trivia] = await db.query('SELECT * FROM Trivia WHERE AdminToken = ?', [adminToken]);
+  return trivia;
+}
+
 async function getTriviaAvailableByRoomCode(roomCode) {
   const [trivia] = await db.query('SELECT * FROM Trivia WHERE RoomCode = ? AND Status ="Open"', [roomCode]);
   return trivia;
@@ -96,8 +101,16 @@ async function addAttempt(attempt) {
 }
 
 async function getTriviaByTriviaID(triviaID) {
-  const [trivia] = await db.query('SELECT ID, Status FROM Trivia WHERE ID = ?', [triviaID]);
+  const [trivia] = await db.query('SELECT * FROM Trivia WHERE ID = ?', [triviaID]);
   return trivia;
 }
 
-module.exports= {addTrivia, getTriviaQuestions, getTriviaByRoomCode, getQuestionOptions, getTriviaAvailableByRoomCode, addAttempt, getTriviaByTriviaID};
+async function startTrivia(adminToken) {
+  await db.query('UPDATE TABLE Trivia SET Status = "Open", DateStarted = NOW() WHERE AdminToken = ?', [adminToken]);
+}
+
+async function stopTrivia(adminToken) {
+  await db.query('UPDATE TABLE Trivia SET Status = "Closed", DateClosed = NOW() WHERE AdminToken = ?', [adminToken]);
+}
+
+module.exports= {addTrivia, getTriviaQuestions, getTriviaByRoomCode, getQuestionOptions, getTriviaAvailableByRoomCode, addAttempt, getTriviaByTriviaID, getTriviaByAdminToken, startTrivia, stopTrivia};
