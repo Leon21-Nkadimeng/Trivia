@@ -47,6 +47,25 @@ CREATE TABLE Question_Option (
     PRIMARY KEY(ID)
 );
 
+CREATE TABLE Trivia_Attempt (
+    ID VARCHAR(200) NOT NULL UNIQUE,
+    TriviaID VARCHAR(200) NOT NULL,
+    AttemptName VARCHAR(100) NOT NULL,
+    DateStarted DATETIME NOT NULL,
+    DateSubmitted DATETIME NOT NULL,
+
+    FOREIGN KEY(TriviaID) REFERENCES Trivia(ID),
+    PRIMARY KEY(ID)
+);
+
+CREATE TABLE Selected_Option (
+    AttemptID VARCHAR(200) NOT NULL,
+    OptionID VARCHAR(200) NOT NULL,
+    FOREIGN KEY(AttemptID) REFERENCES Trivia_Attempt(ID),
+    FOREIGN KEY(OptionID) REFERENCES Question_Option(ID),
+    PRIMARY KEY(AttemptID, OptionID)
+);
+
 
 
 
