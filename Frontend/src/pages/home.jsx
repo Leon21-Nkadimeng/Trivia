@@ -3,7 +3,7 @@ import { useState } from 'react';
 import '../assets/styles/home.css'
 function App() {
   const [count, setCount] = useState(0)
-
+  const [roomCode, setRoomCode] = useState('');
   return (
     
     <div className='page-container'>
@@ -35,8 +35,8 @@ function App() {
             </span>
           </div>
           <div className='join-room-section'>
-            <input type='text' className='room-code-input' placeholder='Enter room code' />
-            <button className='join-button' onClick={() =>  window.location.href='/play/123'}>Join</button>
+            <input type='text' className='room-code-input' placeholder='Enter room code' onChange={(e) => setRoomCode(e.target.value)} />
+            <button className='join-button' onClick={() =>  window.location.href=`/play/${roomCode}`}>Join</button>
           </div>
         </div>
         <div className=''>

@@ -9,4 +9,6 @@ const triviaValidator = require("../validators/trivia.validator");
 
 router.route("/create").post(triviaValidator.validateTriviaInfo, triviaController.addTrivia);
 
+router.route("/get/trivia/:RoomCode").get(triviaController.getTrivia);
+
 module.exports = router;

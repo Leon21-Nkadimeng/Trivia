@@ -42,4 +42,29 @@ async function getTriviaByRoomCode(roomCode) {
   return trivia;
 }
 
-module.exports= {addTrivia, getTriviaByRoomCode};
+async function getTriviaAvailableByRoomCode(roomCode) {
+  const [trivia] = await db.query('SELECT * FROM Trivia WHERE RoomCode = ? AND Status ="Open"', [roomCode]);
+  return trivia;
+}
+
+async function getTriviaQuestions(triviaID) {
+  const questionsQuery = `
+  SELECT ID, QuestionText FROM Question where TriviaID = ?
+  `;
+
+  const [questions] = await db.query(questionsQuery, [triviaID]);
+  return questions;
+}
+
+
+async function getQuestionOptions(questionID) {
+
+  const optionsQuery = `
+  SELECT ID, OptionText, IsCorrect FROM Question_Option WHERE QuestionID = ?
+  `;
+
+  const [options] = await db.query(optionsQuery, [questionID]);
+  return options;
+}
+
+module.exports= {addTrivia, getTriviaQuestions, getTriviaByRoomCode, getQuestionOptions, getTriviaAvailableByRoomCode};

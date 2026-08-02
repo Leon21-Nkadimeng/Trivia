@@ -32,5 +32,55 @@ async function addTrivia(req, res) {
   }
 }
 
+async function getTrivia(req, res) {
+  try {
+    //console.log(req.params);
+    const {RoomCode} = req.params;
 
-module.exports = {addTrivia};
+
+    const trivia = await triviaService.getTriviaAvailableByRoomCode(RoomCode.trim());
+
+    if(!trivia || trivia.length === 0)
+      return res.status(204).json({message:"Trivia not found"});
+   // console.log(trivia[0].ID)
+    const triviaQuestions = await triviaService.getTriviaQuestions(trivia[0].ID);
+    //console.log(triviaQuestions)
+/*
+    for(let i = 0; i < questions; i++) {
+      const [options] = await db.query(optionsQuery, [questions[i].questionID]);
+      questions[i] = {
+        ...questions[i], 
+        multipleAnswers: options.filter(o => o.IsCorrect === 1).length > 1, 
+        options: options.map(o => ({text: o.text, optionID: o.optionID}))
+      };
+    }
+*/
+
+    for(let i = 0; i < triviaQuestions.length; i++) {
+      const question = triviaQuestions[i];
+      const options = await triviaService.getQuestionOptions(question.ID);
+      //console.log(options)
+
+      triviaQuestions[i] = {
+        ...question,
+        multipleAnswers: options.filter(o => o.IsCorrect === 1).length > 1,
+        options: options.map(o => ({text: o.OptionText, ID: o.ID, selected:false}))
+      }
+    }
+
+    
+    return res.status(200).json({
+      ID: trivia[0].ID, 
+      TriviaTitle: trivia[0].TriviaTitle,
+      AdminName: trivia[0].AdminName, 
+      questions: triviaQuestions
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({message: error.message});
+  }
+  
+}
+
+
+module.exports = {addTrivia, getTrivia};
