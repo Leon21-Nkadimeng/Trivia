@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react"
 import { getTrivia } from "../services/trivia.service";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { submitAttempt } from "../services/trivia.service";
 
 export default function PlayTrivia() {
   const [trivia, setTrivia] = useState({});
   const [questions, setQuestions] = useState([
   ]);
+
+  const navigate = useNavigate();
 
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
@@ -15,8 +18,8 @@ export default function PlayTrivia() {
 
   const [entryNameTemp, setEntryNameTemp] = useState(undefined);
   const [entryName, setEntryName] = useState(undefined);
+  const [startDate, setStartDate] = useState(undefined);
   const {roomCode} = useParams();
-
 
 
   // load the questions from the backend
@@ -31,6 +34,9 @@ export default function PlayTrivia() {
         setQuestions(data.questions);
         setTrivia(data);
         //setAnswers(data.questions.map(question => ({ID: question.ID, options: []})));
+        const now = new Date();
+
+        setStartDate( now.toISOString().slice(0, 16).replace('T', ' '));
       }
     }
 
@@ -63,7 +69,7 @@ export default function PlayTrivia() {
       if(option.selected)
         selected++;
     });
-    console.log(selected);
+   // console.log(selected);
     setNumSelected(selected);
     setCurrentQuestionIndex(currentQuestionIndex + 1);
   }
@@ -74,9 +80,33 @@ export default function PlayTrivia() {
       if(option.selected)
         selected++;
     });
-    console.log(selected)
+   // console.log(selected)
     setNumSelected(selected);
     setCurrentQuestionIndex(currentQuestionIndex - 1);
+  }
+
+  async function submitAttemptToAPI(startDateTime, TriviaID, AttemptName, DateStarted, solvedQuestions) {
+    const now = new Date();
+       
+    const FinishDateTime =  now.toISOString().slice(0, 16).replace('T', ' ');
+
+    const a = {
+      AttemptName, 
+      FinishDateTime, 
+      questions: solvedQuestions,
+      TriviaID,
+      DateStarted
+    }
+
+   // console.log(a);
+    const res = await submitAttempt(a);
+    if(res.ok) {
+      alert("Response submitted successfully");
+      navigate('/');
+    } else {
+      const data = await res.json();
+      alert(data.message);
+    }
   }
 
   if(!entryName) {
@@ -114,7 +144,7 @@ export default function PlayTrivia() {
         }
         {
           currentQuestionIndex === questions.length - 1 && numSelected > 0 &&
-          <button onClick={() => {}}>Submit</button>
+          <button onClick={async () => await submitAttemptToAPI(startDate, trivia.ID, entryName, startDate, questions)}>Submit</button>
         }
       </div>
     </div>

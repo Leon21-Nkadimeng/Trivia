@@ -62,7 +62,7 @@ async function validateAttemptInfo(req, res, next) {
 
     const requestBody = req.body;
 
-    if(!requestBody.DateStarted || !requestBody.TriviaID || !requestBody.AttemptName || !requestBody.questions || requestBody.questions.length === 0) {
+    if(!requestBody.DateStarted || !requestBody.TriviaID || !requestBody.AttemptName || !requestBody.questions || requestBody.questions.length === 0 || !requestBody.FinishDateTime) {
       return res.status(400).json({message:"Missing trivia information."});
     }
 
@@ -70,7 +70,7 @@ async function validateAttemptInfo(req, res, next) {
     const data = await triviaService.getTriviaByTriviaID(requestBody.TriviaID);
 
     if(!data || data.length === 0) {
-      return res.status(204).json({message:"Trivia not found"});
+      return res.status(404).json({message:"Trivia not found"});
     }
 
     if(data[0].Status === 'Closed')

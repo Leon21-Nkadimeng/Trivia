@@ -21,3 +21,17 @@ export async function getTrivia(roomCode) {
   const response = await fetch(API_URL);
   return response;
 }
+
+
+export async function submitAttempt(attempt) {
+  const API_URL = `http://localhost:7676/trivias/save/attempt`;
+  const response = await fetch(API_URL, {
+    method:"POST",
+    headers: {
+      "Content-type":"application/json"
+    },
+    body: JSON.stringify(attempt)
+  });
+
+  return response;
+}

@@ -76,8 +76,8 @@ async function addAttempt(attempt) {
     await connection.beginTransaction();
 
 
-    const attemptSQL = 'INSERT INTO Trivia_Attempt (ID, TriviaID, AttemptName, DateStarted, DateSubmitted) VALUES (?, ?, ?, ?, NOW())';
-    await connection.query(attemptSQL, [attempt.ID, attempt.TriviaID, attempt.AttemptName, attempt.DateStarted]);
+    const attemptSQL = 'INSERT INTO Trivia_Attempt (ID, TriviaID, AttemptName, DateStarted, DateSubmitted) VALUES (?, ?, ?, ?, ?)';
+    await connection.query(attemptSQL, [attempt.ID, attempt.TriviaID, attempt.AttemptName, attempt.DateStarted, attempt.FinishDateTime]);
 
     const selectedOptionSQL = 'INSERT INTO Selected_Option (AttemptID, OptionID) VALUES (?, ?)';
     const answers = attempt.answers;
