@@ -31,14 +31,19 @@ export default function PlayTrivia() {
       
       const qs = await getTrivia(roomCode);
       if(qs.ok) {
-       console.log(qs);
+        
         const data = await qs.json();
+        
         setQuestions(data.questions);
-        setTrivia(data);
+        
         //setAnswers(data.questions.map(question => ({ID: question.ID, options: []})));
         const now = new Date();
 
         setStartDate( now.toISOString().slice(0, 23).replace('T', ' '));
+      } else {
+        if(qs.status === 404)
+          alert('Cannot play trivia, trivia is closed');
+        navigate("/")
       }
     }
 

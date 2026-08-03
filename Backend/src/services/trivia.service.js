@@ -133,7 +133,7 @@ async function getTriviaDetailsForManagement(adminToken) {
 async function getLeaderboard(adminToken) {
   const SQL = `
   SELECT
-	TIMESTAMPDIFF(MICROSECOND, Trivia_Attempt.DateStarted, Trivia_Attempt.DateSubmitted) / 6000000.0 as attempt_time_minutes, 
+	TIMESTAMPDIFF(MICROSECOND, Trivia_Attempt.DateStarted, Trivia_Attempt.DateSubmitted) as attempt_time_minutes, 
     Trivia_Attempt.AttemptName, sum(u.IsCorrect) as correct_answers
   FROM Trivia_Attempt 
   inner join Trivia on Trivia.ID = Trivia_Attempt.TriviaID

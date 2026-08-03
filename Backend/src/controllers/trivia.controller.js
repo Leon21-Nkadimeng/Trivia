@@ -43,7 +43,7 @@ async function getTrivia(req, res) {
     const trivia = await triviaService.getTriviaAvailableByRoomCode(RoomCode.trim());
 
     if(!trivia || trivia.length === 0)
-      return res.status(204).json({message:"Trivia not found"});
+      return res.status(404).json({message:"Trivia not found"});
    // console.log(trivia[0].ID)
     const triviaQuestions = await triviaService.getTriviaQuestions(trivia[0].ID);
     //console.log(triviaQuestions)

@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getTriviaForManagement, stopTrivia } from "../services/trivia.service";
+
 import '../assets/styles/manage-trivia.css';
+import { formatDuration } from "../utils/utils";
 export default function ManageTrivia() {
   const {adminToken} = useParams();
   const [trivia, setTrivia] = useState({});
@@ -78,7 +80,7 @@ export default function ManageTrivia() {
               <div className={`leaderboard-row ${i === 0 ? 'first-place' : ''}`} key={i}>
                 <span className="rank">{i + 1}</span>
                 <span className="participant-name">{entry.AttemptName}</span>
-                <span className="time-taken">{entry.attempt_time_minutes}</span>
+                <span className="time-taken">{formatDuration(entry.attempt_time_minutes)}</span>
                 <span className="score">{entry.correct_answers}/{trivia.questions}</span>
               </div>
             ))}
