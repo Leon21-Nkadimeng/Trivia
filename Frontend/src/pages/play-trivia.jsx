@@ -38,7 +38,7 @@ export default function PlayTrivia() {
         //setAnswers(data.questions.map(question => ({ID: question.ID, options: []})));
         const now = new Date();
 
-        setStartDate( now.toISOString().slice(0, 16).replace('T', ' '));
+        setStartDate( now.toISOString().slice(0, 23).replace('T', ' '));
       }
     }
 
@@ -90,7 +90,7 @@ export default function PlayTrivia() {
   async function submitAttemptToAPI(startDateTime, TriviaID, AttemptName, DateStarted, solvedQuestions) {
     const now = new Date();
        
-    const FinishDateTime =  now.toISOString().slice(0, 16).replace('T', ' ');
+    const FinishDateTime =  now.toISOString().slice(0, 23).replace('T', ' ');
 
     const a = {
       AttemptName, 

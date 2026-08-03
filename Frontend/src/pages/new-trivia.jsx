@@ -2,7 +2,9 @@ import { useState } from "react";
 import '../assets/styles/create-trivia.css'
 
 import { submitTrivia } from "../services/trivia.service";
+import { useNavigate } from "react-router-dom";
 export default function CreateTrivia() {
+  const navigation = useNavigate();
   const [adminName, setAdminName] = useState('');
   const [hostEmail, setHostEmail] = useState('');
   const [triviaTitle, setTriviaTitle] = useState('');
@@ -115,9 +117,12 @@ export default function CreateTrivia() {
 
     try {
       const data = await submitTrivia(trivia);
-      alert(data.message);
+      if(!data.AdminToken)
+        alert(data.message);
+      else
+        navigation(`/manage/${data.AdminToken}`);
     } catch (error) {
-      
+      console.log(error);
     }
   }
 

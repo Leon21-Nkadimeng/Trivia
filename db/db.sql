@@ -1,6 +1,6 @@
 CREATE DATABASE IF NOT EXISTS Trivia_DB;
 USE Trivia_DB;
-
+-- drop database trivia_db;
 -- show tables
 /*
 create table Hosts (
@@ -21,7 +21,7 @@ CREATE TABLE Trivia (
 	AdminToken VARCHAR(100) NOT NULL,
     RoomCode VARCHAR(100) NOT NULL UNIQUE,
     DateCreated TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    DateStarted TIMESTAMP NULL,
+    DateStarted TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
     DateClosed DATETIME NULL,
     Status ENUM('Open', 'Closed') NOT NULL DEFAULT 'Closed',
     
@@ -51,8 +51,8 @@ CREATE TABLE Trivia_Attempt (
     ID VARCHAR(200) NOT NULL UNIQUE,
     TriviaID VARCHAR(200) NOT NULL,
     AttemptName VARCHAR(100) NOT NULL,
-    DateStarted DATETIME NOT NULL,
-    DateSubmitted DATETIME NOT NULL,
+    DateStarted TIMESTAMP NOT NULL ,
+    DateSubmitted TIMESTAMP NOT NULL,
 
     FOREIGN KEY(TriviaID) REFERENCES Trivia(ID),
     PRIMARY KEY(ID)

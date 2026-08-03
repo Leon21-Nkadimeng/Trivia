@@ -35,3 +35,22 @@ export async function submitAttempt(attempt) {
 
   return response;
 }
+
+export async function getTriviaForManagement(adminToken) {
+ 
+   const API_URL = `http://localhost:7676/trivias/manage/${adminToken}`;
+
+   const response = await fetch(API_URL);
+
+   return response;
+}
+
+export async function stopTrivia(adminToken) {
+  console.log(adminToken)
+  const API_URL = `http://localhost:7676/trivias/stop/${adminToken}`;
+  const response = await fetch(API_URL);
+
+   return response;
+}
+
+

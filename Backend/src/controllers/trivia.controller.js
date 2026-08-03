@@ -24,7 +24,9 @@ async function addTrivia(req, res) {
           isCorrect: option.isCorrect ? 1 : 0
         }))
       }))
-    })
+    });
+
+  
     return res.status(201).json({message:`Trivia created successfully`, RoomCode, AdminToken});
   } catch (error) {
     console.log(error);
@@ -124,5 +126,35 @@ async function getTriviaByAdminToken(req, res) {
   }
 }
 
+async function getTriviaForManagement(req, res) {
+  try { 
+    const adminToken = req.params.adminToken.trim();
 
-module.exports = {addTrivia, getTrivia, addAttempt, getTriviaByAdminToken};
+    const trivia = await triviaService.getTriviaDetailsForManagement(adminToken);
+   console.log(trivia);
+   console.log(adminToken)
+    if(trivia.length === 0)
+      return res.status(404).json({message:"Trivia not found"});
+    const leaderBoard = await triviaService.getLeaderboard(adminToken);
+    
+
+    return res.status(200).json({trivia: trivia[0], leaderboard: leaderBoard});
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({message: error.message});    
+  }
+}
+
+async function stopTrivia(req, res) {
+  try {
+    const adminToken = req.params.adminToken.trim();
+    await triviaService.stopTrivia(adminToken);
+    return res.status(200).json({message:"Success"});
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({message: error.message});    
+  }
+}
+
+
+module.exports = {addTrivia, getTrivia, addAttempt, getTriviaByAdminToken, getTriviaForManagement, stopTrivia};

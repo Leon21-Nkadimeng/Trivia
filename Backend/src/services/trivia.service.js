@@ -106,11 +106,49 @@ async function getTriviaByTriviaID(triviaID) {
 }
 
 async function startTrivia(adminToken) {
-  await db.query('UPDATE TABLE Trivia SET Status = "Open", DateStarted = NOW() WHERE AdminToken = ?', [adminToken]);
+  await db.query('UPDATE Trivia SET Status = "Open", DateStarted = NOW() WHERE AdminToken = ?', [adminToken]);
 }
 
 async function stopTrivia(adminToken) {
-  await db.query('UPDATE TABLE Trivia SET Status = "Closed", DateClosed = NOW() WHERE AdminToken = ?', [adminToken]);
+  await db.query('UPDATE Trivia SET Status = "Closed", DateClosed = NOW() WHERE AdminToken = ?', [adminToken]);
 }
 
-module.exports= {addTrivia, getTriviaQuestions, getTriviaByRoomCode, getQuestionOptions, getTriviaAvailableByRoomCode, addAttempt, getTriviaByTriviaID, getTriviaByAdminToken, startTrivia, stopTrivia};
+
+async function getTriviaDetailsForManagement(adminToken) {
+  const SQL = `
+    SELECT Trivia.ID as triviaID, Trivia.TriviaTitle, Trivia.Status, Trivia.AdminName, Trivia.RoomCode, COUNT(DISTINCT Question.ID) as questions, COUNT(DISTINCT Trivia_Attempt.ID) as participants
+    FROM Trivia LEFT JOIN Question ON Question.TriviaID = Trivia.ID
+    LEFT JOIN Trivia_Attempt on Trivia.ID = Trivia_Attempt.TriviaID
+    WHERE Trivia.AdminToken = ?
+    GROUP BY
+        Trivia.ID,
+        Trivia.TriviaTitle,
+        Trivia.AdminName,
+        Trivia.RoomCode
+  `
+  const [data] = await db.query(SQL, [adminToken]);
+  return data;
+}
+
+async function getLeaderboard(adminToken) {
+  const SQL = `
+  SELECT
+	TIMESTAMPDIFF(MICROSECOND, Trivia_Attempt.DateStarted, Trivia_Attempt.DateSubmitted) / 6000000.0 as attempt_time_minutes, 
+    Trivia_Attempt.AttemptName, sum(u.IsCorrect) as correct_answers
+  FROM Trivia_Attempt 
+  inner join Trivia on Trivia.ID = Trivia_Attempt.TriviaID
+  inner join Selected_Option on Selected_Option.AttemptID = Trivia_Attempt.ID
+  inner join (select ID, IsCorrect from Question_Option) as u on u.ID = Selected_Option.OptionID
+  WHERE Trivia.AdminToken = ?
+  GROUP BY
+      Trivia_Attempt.ID,
+      Trivia_Attempt.AttemptName,
+      Trivia_Attempt.DateStarted,
+      Trivia_Attempt.DateSubmitted
+  ORDER BY correct_answers DESC, attempt_time_minutes ASC
+  `
+
+  const [data] = await db.query(SQL, [adminToken]);
+  return data;
+}
+module.exports= {addTrivia, getTriviaQuestions, getTriviaByRoomCode, getQuestionOptions, getTriviaAvailableByRoomCode, addAttempt, getTriviaByTriviaID, getTriviaByAdminToken, startTrivia, stopTrivia, getLeaderboard, getTriviaDetailsForManagement};
