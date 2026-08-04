@@ -51,7 +51,7 @@ export default function ManageTrivia() {
     // change the copy button icon after 2 seconds
     setTimeout(() => {
       setCopied(false);
-    }, 2000);
+    }, 2500);
   }
 
   
@@ -64,7 +64,7 @@ export default function ManageTrivia() {
       <div className="manage-header">
         <p className="eyebrow">Manage trivia</p>
         <h1>{trivia.TriviaTitle}</h1>
-        <p className="subtext">Created by: {trivia.AdminName} &bull; {trivia.questions} questions</p>
+        <p className="subtext">Created by: {trivia.AdminName} &bull; {trivia.questions} {trivia.questions > 1 ? 'questions' : 'question'}</p>
       </div>
 
       <div className="stats-row">
