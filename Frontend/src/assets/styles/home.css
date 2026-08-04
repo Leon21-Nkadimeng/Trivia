@@ -118,7 +118,7 @@ body {
   color: white;
 }
 
-.join-button {
+.join-button, .create-button {
   font-size: 20px;
   padding-top: 5px;
   padding-bottom: 5px;
@@ -127,4 +127,5 @@ body {
   border-radius: 10px;
   border: 2px solid rgb(255, 255, 255);
   background-color: white;
+  cursor: pointer;
 }

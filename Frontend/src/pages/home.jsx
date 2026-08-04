@@ -24,7 +24,7 @@ function App() {
           <div className='signup-or-login-section'>
             <button onClick={() => {
               window.location.href='/new-trivia';
-            }}>Create Trivia</button>
+            }} className='create-button'>Create Trivia</button>
           </div>
         </div>
         <div className='join-section'>

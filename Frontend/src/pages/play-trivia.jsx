@@ -35,7 +35,7 @@ export default function PlayTrivia() {
         const data = await qs.json();
         
         setQuestions(data.questions);
-        
+        setTrivia(data);
         //setAnswers(data.questions.map(question => ({ID: question.ID, options: []})));
         const now = new Date();
 

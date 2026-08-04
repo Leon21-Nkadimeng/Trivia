@@ -181,7 +181,7 @@ export default function CreateTrivia() {
               />
               <input 
                 type="text"
-                placeholder={`Option ${opt.text ? opt.text : i}`}
+                placeholder={`Option ${opt.text ? opt.text : i + 1}`}
                 value={opt.text}
                 onChange={(e) => updateOptions(index, i, e.target.value)}
               />

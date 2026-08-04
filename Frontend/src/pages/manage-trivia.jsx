@@ -42,6 +42,19 @@ export default function ManageTrivia() {
       navigate("/");
     }
   }
+
+  async function handleCopy(RoomCode) {
+    // save to clipboard
+    await navigator.clipboard.writeText(RoomCode);
+    setCopied(true);
+
+    // change the copy button icon after 2 seconds
+    setTimeout(() => {
+      setCopied(false);
+    }, 2000);
+  }
+
+  
   
 
 
@@ -50,8 +63,8 @@ export default function ManageTrivia() {
     <div className="manage-trivia-page">
       <div className="manage-header">
         <p className="eyebrow">Manage trivia</p>
-        <h1>Friday night trivia</h1>
-        <p className="subtext">Created by: Leon &bull; 5 questions</p>
+        <h1>{trivia.TriviaTitle}</h1>
+        <p className="subtext">Created by: {trivia.AdminName} &bull; {trivia.questions} questions</p>
       </div>
 
       <div className="stats-row">
@@ -59,7 +72,7 @@ export default function ManageTrivia() {
           <p className="stat-label">Room code</p>
           <div className="room-code-row">
             <span className="code-text">{trivia.RoomCode}</span>
-            <button className="copy-icon-btn" type="button">
+            <button className="copy-icon-btn" type="button" onClick={() => {handleCopy(trivia.RoomCode)}}>
               {copied ? '✓' : '⧉'}
             </button>
           </div>
