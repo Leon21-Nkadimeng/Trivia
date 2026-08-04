@@ -6,3 +6,5 @@ Please note that the system is not deployed yet.
 
 Please note.
 Layout and CSS styling for the UI were developed with the help of Claude AI. All application logic, database design, and backend functionality were built independently.
+
+Quick system demo on YouTube: https://youtu.be/x_zs4uER-rY
