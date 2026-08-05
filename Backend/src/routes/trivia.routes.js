@@ -14,7 +14,7 @@ router.route("/get/trivia/:RoomCode").get(triviaController.getTrivia);
 router.route("/save/attempt").post(triviaValidator.validateAttemptInfo, triviaController.addAttempt);
 
 router.route("/manage/:adminToken").get((req, res, next) => {
-  console.log(req.params);
+  
   if(!req.params)
     return res.status(400).json({message:"REquest params are missing"});
 

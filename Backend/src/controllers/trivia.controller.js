@@ -131,8 +131,8 @@ async function getTriviaForManagement(req, res) {
     const adminToken = req.params.adminToken.trim();
 
     const trivia = await triviaService.getTriviaDetailsForManagement(adminToken);
-   console.log(trivia);
-   console.log(adminToken)
+  // console.log(trivia);
+  // console.log(adminToken)
     if(trivia.length === 0)
       return res.status(404).json({message:"Trivia not found"});
     const leaderBoard = await triviaService.getLeaderboard(adminToken);
