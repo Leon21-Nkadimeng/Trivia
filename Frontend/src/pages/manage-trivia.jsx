@@ -4,16 +4,20 @@ import { getTriviaForManagement, stopTrivia } from "../services/trivia.service";
 
 import '../assets/styles/manage-trivia.css';
 import { formatDuration } from "../utils/utils";
+import socket from "../socket";
 export default function ManageTrivia() {
   const {adminToken} = useParams();
   const [trivia, setTrivia] = useState({});
   const [leaderboard, setLeaderboard] = useState([]);
   const [copied, setCopied] = useState(false);
+
+  const [status, setStatus] = useState("Disconnected");
   const navigate = useNavigate();
 
   useEffect(() => {
     if(!adminToken)
       navigate('/');
+    
     async function load() {
       const res = await getTriviaForManagement(adminToken);
       const data = await res.json();
@@ -25,6 +29,53 @@ export default function ManageTrivia() {
     load();
     
   }, []);
+
+
+  useEffect(() => {
+    if(!adminToken) return;
+    
+
+    function handleConnect() {
+      console.log("Connected to socket.io:",socket.id);
+      setStatus("Connected");
+
+      socket.emit("register", adminToken);
+    }
+
+    function handleDisconnect(reason) {
+      console.log("Socket disconnected:", reason);
+      setStatus("Disconnected");
+    }
+
+
+    function handleConnectError(error) {
+      console.error("Socket connection error:", error.message);
+      setStatus("Connection failed");
+    }
+
+    function handleLeaderboardUpdate(updatedLeaderboard) {
+      console.log("Leaderboard updated:", updatedLeaderboard);
+      setLeaderboard(updatedLeaderboard);
+    }
+
+
+    socket.on("connect", handleConnect);
+    socket.on("disconnect", handleDisconnect);
+    socket.on("connect_error", handleConnectError);
+    socket.on("leaderboard:update", handleLeaderboardUpdate);
+
+    socket.connect();
+
+    return () => {
+      socket.off("connect", handleConnect);
+      socket.off("disconnect", handleDisconnect);
+      socket.off("connect_error", handleConnectError);
+      socket.off("leaderboard:update", handleLeaderboardUpdate);
+
+      socket.disconnect();
+    };
+  }, [adminToken]);
+
 
   async function handleStopTrivia(token) {
     try {

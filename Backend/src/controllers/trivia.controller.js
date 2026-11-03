@@ -1,6 +1,7 @@
 const utils = require("../utils/trivia.utils");
 const triviaService = require("../services/trivia.service");
 const crypto = require("crypto");
+const { getIO } = require("../socket");
 
 async function addTrivia(req, res) {
   try {
@@ -98,11 +99,23 @@ async function addAttempt(req, res) {
     });
     
 
-    await triviaService.addAttempt({
+    const finalAttempt = {
       ...attempt, 
       ID: crypto.randomUUID(),
       answers
-    });
+    };
+    await triviaService.addAttempt(finalAttempt);
+
+    const adminToken = await triviaService.getAdminToken(finalAttempt.TriviaID);
+    //console.log(finalAttempt.TriviaID)
+   // console.log(adminT)
+   
+    if(adminToken) {
+      const io = getIO();
+      const updatedLeaderboard = await triviaService.getLeaderboard(adminToken);
+     
+      io.to(`room:${adminToken}`).emit("leaderboard:update", updatedLeaderboard);
+    }
 
     return res.status(201).json({message:"Trivia attempt added successfully"});
   } catch (error) {

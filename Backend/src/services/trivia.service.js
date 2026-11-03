@@ -93,8 +93,8 @@ async function addAttempt(attempt) {
     // commit changes to the database
     await connection.commit();
   } catch (error) {
-    throw error;
     await connection.rollback();
+    throw error;
   } finally {
     connection.release();
   }
@@ -151,4 +151,10 @@ async function getLeaderboard(adminToken) {
   const [data] = await db.query(SQL, [adminToken]);
   return data;
 }
-module.exports= {addTrivia, getTriviaQuestions, getTriviaByRoomCode, getQuestionOptions, getTriviaAvailableByRoomCode, addAttempt, getTriviaByTriviaID, getTriviaByAdminToken, startTrivia, stopTrivia, getLeaderboard, getTriviaDetailsForManagement};
+
+async function getAdminToken(triviaId) {
+  const [[{AdminToken}]] = await db.query('SELECT AdminToken FROM Trivia WHERE ID = ?', [triviaId]);
+  
+  return AdminToken;
+}
+module.exports= {addTrivia, getTriviaQuestions, getTriviaByRoomCode, getQuestionOptions, getTriviaAvailableByRoomCode, addAttempt, getTriviaByTriviaID, getTriviaByAdminToken, startTrivia, stopTrivia, getLeaderboard, getTriviaDetailsForManagement, getAdminToken};
