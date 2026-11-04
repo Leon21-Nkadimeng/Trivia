@@ -147,7 +147,7 @@ return (
           </span>
           <span>
             <Users size={15} />
-            {trivia.participants} {trivia.participants === 1 ? 'participant' : 'participants'}
+            {participants} {participants === 1 ? 'participant' : 'participants'}
           </span>
         </div>
       </header>
