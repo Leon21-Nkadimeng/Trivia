@@ -2,6 +2,7 @@ const utils = require("../utils/trivia.utils");
 const triviaService = require("../services/trivia.service");
 const crypto = require("crypto");
 const { getIO } = require("../socket");
+const { sendTriviaManagementLink } = require("../services/gmail.service");
 
 async function addTrivia(req, res) {
   try {
@@ -26,6 +27,8 @@ async function addTrivia(req, res) {
         }))
       }))
     });
+
+    await sendTriviaManagementLink({to: Email, adminToken: AdminToken});
 
   
     return res.status(201).json({message:`Trivia created successfully`, RoomCode, AdminToken});

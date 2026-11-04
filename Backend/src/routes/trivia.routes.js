@@ -6,6 +6,7 @@ const triviaController = require("../controllers/trivia.controller");
 
 // validators
 const triviaValidator = require("../validators/trivia.validator");
+const { test } = require("../services/gmail.service");
 
 router.route("/create").post(triviaValidator.validateTriviaInfo, triviaController.addTrivia);
 
@@ -33,5 +34,10 @@ router.route("/stop/:adminToken").get((req, res, next) => {
 
   next();
 }, triviaController.stopTrivia);
+
+router.route("/testMail").get(async (req, res) => {
+  await test();
+  res.status(200).json("ok");
+});
 
 module.exports = router;

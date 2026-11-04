@@ -5,9 +5,20 @@ import { getTriviaForManagement, stopTrivia } from "../services/trivia.service";
 import '../assets/styles/manage-trivia.css';
 import { formatDuration } from "../utils/utils";
 import socket from "../socket";
+import {
+  Copy,
+  Check,
+  Trophy,
+  Users,
+  Clock3,
+  SquareStop,
+  CircleHelp,
+  Hash
+} from 'lucide-react';
 export default function ManageTrivia() {
   const {adminToken} = useParams();
   const [trivia, setTrivia] = useState({});
+  const [participants, setParticipants] = useState(0);
   const [leaderboard, setLeaderboard] = useState([]);
   const [copied, setCopied] = useState(false);
 
@@ -23,6 +34,7 @@ export default function ManageTrivia() {
       const data = await res.json();
       setTrivia(data.trivia);
       setLeaderboard(data.leaderboard);
+      setParticipants(data.leaderboard.length)
       console.log(data);
     }
 
@@ -55,6 +67,7 @@ export default function ManageTrivia() {
 
     function handleLeaderboardUpdate(updatedLeaderboard) {
       console.log("Leaderboard updated:", updatedLeaderboard);
+      setParticipants(updatedLeaderboard.length)
       setLeaderboard(updatedLeaderboard);
     }
 
@@ -105,57 +118,171 @@ export default function ManageTrivia() {
     }, 2500);
   }
 
-  
-  
+return (
+  <div className="manage-trivia-page">
+    <div className="manage-container">
 
+      {/* Header */}
+      <header className="manage-header">
+        <p className="eyebrow">TRIVIA MANAGEMENT</p>
 
-  return (
-    
-    <div className="manage-trivia-page">
-      <div className="manage-header">
-        <p className="eyebrow">Manage trivia</p>
-        <h1>{trivia.TriviaTitle}</h1>
-        <p className="subtext">Created by: {trivia.AdminName} &bull; {trivia.questions} {trivia.questions > 1 ? 'questions' : 'question'}</p>
-      </div>
+        <div className="manage-title-row">
+          <div>
+            <h1>{trivia.TriviaTitle}</h1>
+            <p className="subtext">
+              Created by {trivia.AdminName}
+            </p>
+          </div>
 
-      <div className="stats-row">
-        <div className="stat-card">
-          <p className="stat-label">Room code</p>
+          <span className={`status-badge ${trivia.Status === 'Open' ? 'status-open' : 'status-closed'}`}>
+            <span className="status-dot"></span>
+            {trivia.Status}
+          </span>
+        </div>
+
+        <div className="trivia-meta">
+          <span>
+            <CircleHelp size={15} />
+            {trivia.questions} {trivia.questions === 1 ? 'question' : 'questions'}
+          </span>
+          <span>
+            <Users size={15} />
+            {trivia.participants} {trivia.participants === 1 ? 'participant' : 'participants'}
+          </span>
+        </div>
+      </header>
+
+      {/* Overview */}
+      <section className="stats-row">
+
+        <div className="stat-card room-code-card">
+          <div className="stat-card-heading">
+            <span className="stat-label">ROOM CODE</span>
+            <span className="stat-icon"><Hash size={19} /></span>
+          </div>
+
           <div className="room-code-row">
             <span className="code-text">{trivia.RoomCode}</span>
-            <button className="copy-icon-btn" type="button" onClick={() => {handleCopy(trivia.RoomCode)}}>
-              {copied ? '✓' : '⧉'}
+
+            <button
+              className="copy-icon-btn"
+              type="button"
+              onClick={() => handleCopy(trivia.RoomCode)}
+              aria-label="Copy room code"
+              title="Copy room code"
+            >
+              {copied ? <Check size={19} /> : <Copy size={19} />}
             </button>
           </div>
-        </div>
-        <div className="stat-card">
-          <p className="stat-label">Participants</p>
-          <span className="stat-value">{trivia.participants}</span>
-        </div>
-      </div>
 
-      <div className="leaderboard-section">
-        <h3>Leaderboard</h3>
+          <p className="stat-description">
+            Share this code with participants.
+          </p>
+        </div>
+
+        <div className="stat-card participants-card">
+          <div className="stat-card-heading">
+            <span className="stat-label">PARTICIPANTS</span>
+            <span className="stat-icon"><Users size={18} /></span>
+          </div>
+
+          <span className="stat-value">{participants}</span>
+
+          <p className="stat-description">
+            People who have participated.
+          </p>
+        </div>
+
+      </section>
+
+      {/* Leaderboard */}
+      <section className="leaderboard-section">
+        <div className="leaderboard-header">
+          <div>
+            <h2>Leaderboard</h2>
+            <p>See how everyone performed.</p>
+          </div>
+
+          <Trophy size={22} className="leaderboard-icon" />
+        </div>
+
         {leaderboard.length === 0 ? (
-          <p className="empty-leaderboard">{trivia.Status === 'Open' ? 'No one has played yet - share your room code so people can start participating.' : 'No one played, make a new trivia and invite people.'}</p>
+          <div className="empty-leaderboard">
+            <div className="empty-icon">
+              <Trophy size={26} />
+            </div>
+
+            <h3>No participants yet</h3>
+
+            <p>
+              {trivia.Status === 'Open'
+                ? 'Share your room code to get the competition started.'
+                : 'Nobody participated in this trivia.'}
+            </p>
+          </div>
         ) : (
           <div className="leaderboard-list">
+
+            <div className="leaderboard-column-labels">
+              <span>RANK / PLAYER</span>
+              <span>TIME</span>
+              <span>SCORE</span>
+            </div>
+
             {leaderboard.map((entry, i) => (
-              <div className={`leaderboard-row ${i === 0 ? 'first-place' : ''}`} key={i}>
-                <span className="rank">{i + 1}</span>
-                <span className="participant-name">{entry.AttemptName}</span>
-                <span className="time-taken">{formatDuration(entry.attempt_time_minutes)}</span>
-                <span className="score">{entry.correct_answers}/{trivia.questions}</span>
+              <div
+                className={`leaderboard-row ${i === 0 ? 'first-place' : ''}`}
+                key={entry.ID ?? `${entry.AttemptName}-${i}`}
+              >
+                <div className="player-info">
+                  <span className="rank">{i + 1}</span>
+
+                  <div className="participant-details">
+                    <span className="participant-name">
+                      {entry.AttemptName}
+                    </span>
+
+                    {i === 0 && (
+                      <span className="winner-label">Top performer</span>
+                    )}
+                  </div>
+                </div>
+
+                <span className="time-taken">
+                  <Clock3 size={14} />
+                  {formatDuration(entry.attempt_time_minutes)}
+                </span>
+
+                <span className="score">
+                  {entry.correct_answers}
+                  <span> / {trivia.questions}</span>
+                </span>
               </div>
             ))}
+
           </div>
         )}
-      </div>
-      {trivia.Status === 'Open' &&
-      <button className="delete-trivia-btn" type="button" onClick={() => handleStopTrivia(adminToken)}>
-        Stop Trivia
-      </button>
-      }
+      </section>
+
+      {/* Stop trivia */}
+      {trivia.Status === 'Open' && (
+        <div className="manage-actions">
+          <button
+            className="stop-trivia-btn"
+            type="button"
+            onClick={() => handleStopTrivia(adminToken)}
+          >
+            <SquareStop size={17} />
+            Stop trivia
+          </button>
+
+          <p>
+            Stopping the trivia prevents further participation.
+          </p>
+        </div>
+      )}
+
     </div>
-  );
+  </div>
+);
 }
