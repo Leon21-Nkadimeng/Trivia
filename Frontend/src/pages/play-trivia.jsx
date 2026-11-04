@@ -116,49 +116,169 @@ export default function PlayTrivia() {
     }
   }
 
-  if(!entryName) {
-    return (
-    <div className="entry-screen">
-      <input type="text" placeholder="Display name" onChange={(e) => setEntryNameTemp(e.target.value)} className="entry-name-screen" />
-      <button onClick={() => entryNameTemp ? setEntryName(entryNameTemp) : alert("Please enter your display name")} className="start-button">Start</button>
-    </div>)
-  }
 
-  if(!questions || questions.length === 0) return null;
-
+if (!entryName) {
   return (
-    <div className="container">
-    <div className="trivia-card">
-      <div className="title-section"><h2>{trivia.TriviaTitle} by {trivia.AdminName}</h2></div>
-      <hr />
-      <div className="question-section"><span>Question {currentQuestionIndex + 1} / {questions.length}</span></div>
-      <div>{questions[currentQuestionIndex].QuestionText}</div>
-      <div className="questions-section">
-      {questions[currentQuestionIndex].options.map((option, i) => (
-        <div key={option.ID}>
-          {questions[currentQuestionIndex].multipleAnswers ?
-          <input type="checkbox" checked={option.selected} onChange={() => handleCheckOption(currentQuestionIndex, i)} /> : <input type="radio" checked={option.selected} onChange={() => handleCheckOption(currentQuestionIndex, i)} />
-          }
-          <span>{option.text}</span>
-        </div>
-      ))
-      }
-      </div>
-      <div className="game-controls-section">
-        { currentQuestionIndex < questions.length - 1 && numSelected > 0 &&
-        <button onClick={() => goToNextQuestion()} className="next-button">Next Question</button>
-        }
+    <div className="entry-screen">
+      <div className="entry-card">
+        <div className="entry-icon">👤</div>
 
-        {
-          currentQuestionIndex > 0 &&
-          <button onClick={() => goToPrevQuestion()} className="prev-button">Previous Question</button>
-        }
-        {
-          currentQuestionIndex === questions.length - 1 && numSelected > 0 &&
-          <button onClick={async () => await submitAttemptToAPI(startDate, trivia.ID, entryName, startDate, questions)} className="submit-button">Submit</button>
-        }
+        <p className="entry-eyebrow">READY TO PLAY?</p>
+        <h1>Join the game.</h1>
+        <p className="entry-description">
+          Choose a display name to enter the trivia.
+        </p>
+
+        <form
+          className="entry-form"
+          onSubmit={(e) => {
+            e.preventDefault();
+            const name = entryNameTemp.trim();
+
+            if (!name) {
+              alert("Please enter your display name");
+              return;
+            }
+
+            setEntryName(name);
+          }}
+        >
+          <label htmlFor="display-name">Display name</label>
+          <input
+            id="display-name"
+            type="text"
+            placeholder="Enter your name"
+            value={entryNameTemp}
+            onChange={(e) => setEntryNameTemp(e.target.value)}
+            className="entry-name-screen"
+            maxLength={20}
+            autoComplete="off"
+          />
+
+          <button type="submit" className="start-button">
+            Start playing <span>→</span>
+          </button>
+        </form>
+
+        <p className="entry-footer">GOOD LUCK · HAVE FUN</p>
       </div>
     </div>
+  );
+}
+
+if (!questions || questions.length === 0) return null;
+
+const currentQuestion = questions[currentQuestionIndex];
+const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
+
+return (
+  <div className="container">
+    <div className="trivia-card">
+
+      {/* Trivia header */}
+      <div className="trivia-header">
+        <div>
+          <p className="trivia-eyebrow">NOW PLAYING</p>
+          <h2>{trivia.TriviaTitle}</h2>
+          <p className="trivia-host">Hosted by {trivia.AdminName}</p>
+        </div>
+
+        <div className="question-counter">
+          {currentQuestionIndex + 1}
+          <span> / {questions.length}</span>
+        </div>
+      </div>
+
+      {/* Progress */}
+      <div className="progress-container">
+        <div
+          className="progress-bar"
+          style={{ width: `${progress}%` }}
+        />
+      </div>
+
+      {/* Question */}
+      <div className="question-section">
+        <span className="question-label">
+          QUESTION {currentQuestionIndex + 1}
+        </span>
+
+        <h1>{currentQuestion.QuestionText}</h1>
+
+        <p className="answer-instruction">
+          {currentQuestion.multipleAnswers
+            ? "Select all the correct answers."
+            : "Select one answer."}
+        </p>
+      </div>
+
+      {/* Answer options */}
+      <div className="questions-section">
+        {currentQuestion.options.map((option, i) => (
+          <label
+            key={option.ID}
+            className={`answer-option ${option.selected ? "selected" : ""}`}
+          >
+            <input
+              type={currentQuestion.multipleAnswers ? "checkbox" : "radio"}
+              name={`question-${currentQuestionIndex}`}
+              checked={option.selected}
+              onChange={() => handleCheckOption(currentQuestionIndex, i)}
+            />
+
+            <span className="option-indicator">
+              {String.fromCharCode(65 + i)}
+            </span>
+
+            <span className="option-text">{option.text}</span>
+
+            {option.selected && (
+              <span className="option-check">✓</span>
+            )}
+          </label>
+        ))}
+      </div>
+
+      {/* Navigation */}
+      <div className="game-controls-section">
+
+        <button
+          onClick={goToPrevQuestion}
+          className="prev-button"
+          disabled={currentQuestionIndex === 0}
+        >
+          ← Previous
+        </button>
+
+        {currentQuestionIndex < questions.length - 1 ? (
+          <button
+            onClick={goToNextQuestion}
+            className="next-button"
+            disabled={numSelected === 0}
+          >
+            Next question →
+          </button>
+        ) : (
+          <button
+            onClick={async () =>
+              await submitAttemptToAPI(
+                startDate,
+                trivia.ID,
+                entryName,
+                startDate,
+                questions
+              )
+            }
+            className="submit-button"
+            disabled={numSelected === 0}
+          >
+            Submit answers ✓
+          </button>
+        )}
+
+      </div>
     </div>
-  )
+  </div>
+);
+
 }

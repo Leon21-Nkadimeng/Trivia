@@ -131,7 +131,7 @@ async function getTriviaDetailsForManagement(adminToken) {
 }
 
 async function getLeaderboard(adminToken) {
-  const SQL = `
+  /*const SQL = `
   SELECT
 	TIMESTAMPDIFF(MICROSECOND, Trivia_Attempt.DateStarted, Trivia_Attempt.DateSubmitted) as attempt_time_minutes, 
     Trivia_Attempt.AttemptName, sum(u.IsCorrect) as correct_answers
@@ -146,7 +146,57 @@ async function getLeaderboard(adminToken) {
       Trivia_Attempt.DateStarted,
       Trivia_Attempt.DateSubmitted
   ORDER BY correct_answers DESC, attempt_time_minutes ASC
-  `
+  `;*/
+
+  const SQL = `
+  SELECT
+    TIMESTAMPDIFF(
+        MICROSECOND,
+        ta.DateStarted,
+        ta.DateSubmitted
+    ) AS attempt_time_minutes,
+    ta.AttemptName,
+    SUM(question_results.is_correct) AS correct_answers
+
+FROM Trivia_Attempt ta
+
+INNER JOIN Trivia t
+    ON t.ID = ta.TriviaID
+
+INNER JOIN (
+    SELECT
+        so.AttemptID,
+        qo.QuestionID,
+
+        CASE
+            WHEN SUM(qo.IsCorrect) = COUNT(*)
+            THEN 1
+            ELSE 0
+        END AS is_correct
+
+    FROM Selected_Option so
+
+    INNER JOIN Question_Option qo
+        ON qo.ID = so.OptionID
+
+    GROUP BY
+        so.AttemptID,
+        qo.QuestionID
+) AS question_results
+    ON question_results.AttemptID = ta.ID
+
+WHERE t.AdminToken = ?
+
+GROUP BY
+    ta.ID,
+    ta.AttemptName,
+    ta.DateStarted,
+    ta.DateSubmitted
+
+ORDER BY
+    correct_answers DESC,
+    attempt_time_minutes ASC;
+  `;
 
   const [data] = await db.query(SQL, [adminToken]);
   return data;

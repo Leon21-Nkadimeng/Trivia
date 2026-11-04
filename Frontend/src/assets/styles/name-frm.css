@@ -1,0 +1,135 @@
+.entry-screen {
+  min-height: 100vh;
+  width: 100%;
+  background: #111827;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+.entry-card {
+  width: 100%;
+  max-width: 430px;
+  background: #1f2937;
+  border: 1px solid #374151;
+  border-radius: 20px;
+  padding: 40px;
+  box-sizing: border-box;
+  text-align: center;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+}
+
+.entry-icon {
+  width: 58px;
+  height: 58px;
+  margin: 0 auto 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(124, 58, 237, 0.15);
+  border: 1px solid rgba(167, 139, 250, 0.25);
+  border-radius: 16px;
+  font-size: 25px;
+}
+
+.entry-eyebrow {
+  color: #a78bfa;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  margin-bottom: 12px;
+}
+
+.entry-card h1 {
+  color: #f9fafb;
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  margin: 0;
+}
+
+.entry-description {
+  color: #9ca3af;
+  font-size: 14px;
+  line-height: 1.7;
+  margin: 12px 0 32px;
+}
+
+.entry-form {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  gap: 12px;
+}
+
+.entry-form label {
+  color: #d1d5db;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.entry-name-screen {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 15px 16px;
+  background: #111827;
+  border: 1px solid #4b5563;
+  border-radius: 10px;
+  color: #f9fafb;
+  font-size: 15px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.entry-name-screen::placeholder {
+  color: #6b7280;
+}
+
+.entry-name-screen:focus {
+  border-color: #8b5cf6;
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15);
+}
+
+.start-button {
+  width: 100%;
+  padding: 15px;
+  margin-top: 8px;
+  border: none;
+  border-radius: 10px;
+  background: #7c3aed;
+  color: white;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.start-button:hover {
+  background: #6d28d9;
+  transform: translateY(-2px);
+}
+
+.start-button span {
+  margin-left: 8px;
+  font-size: 18px;
+}
+
+.entry-footer {
+  color: #6b7280;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  margin: 30px 0 0;
+}
+
+@media (max-width: 480px) {
+  .entry-card {
+    padding: 32px 24px;
+  }
+
+  .entry-card h1 {
+    font-size: 28px;
+  }
+}
