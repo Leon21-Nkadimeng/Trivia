@@ -73,6 +73,56 @@ describe("Trivia Service", () => {
 
             // Trivia + question + 2 options
             expect(connection.query).toHaveBeenCalledTimes(4);
+            
+// verify trivia insert
+            expect(connection.query).toHaveBeenNthCalledWith(
+                1,
+                expect.stringContaining("INSERT INTO Trivia"),
+                [
+                    trivia.triviaID,
+                    trivia.triviaTitle,
+                    trivia.AdminName,
+                    trivia.Email,
+                    trivia.AdminToken,
+                    trivia.RoomCode
+                ]
+            );
+
+
+            // verify question insert
+            expect(connection.query).toHaveBeenNthCalledWith(
+                2,
+                expect.stringContaining("INSERT INTO Question"),
+                [
+                    trivia.questions[0].questionID,
+                    trivia.triviaID,
+                    trivia.questions[0].text
+                ]
+            );
+
+            // verify the first option
+            expect(connection.query).toHaveBeenNthCalledWith(
+                3,
+                expect.stringContaining("INSERT INTO Question_Option"),
+                [
+                    trivia.questions[0].options[0].optionID,
+                    trivia.questions[0].questionID,
+                    trivia.questions[0].options[0].text,
+                    trivia.questions[0].options[0].isCorrect
+                ]
+            );
+            // verify the second option
+            expect(connection.query).toHaveBeenNthCalledWith(
+                4,
+                expect.stringContaining("INSERT INTO Question_Option"),
+                [
+                    trivia.questions[0].options[1].optionID,
+                    trivia.questions[0].questionID,
+                    trivia.questions[0].options[1].text,
+                    trivia.questions[0].options[1].isCorrect
+                ]
+            );
+
 
             // Verify transaction committed
             expect(connection.commit).toHaveBeenCalled();
@@ -90,7 +140,6 @@ describe("Trivia Service", () => {
 
             const error = new Error("Database insertion failed");
 
-            // First query succeeds, second query fails
             connection.query
                 .mockResolvedValueOnce([])
                 .mockRejectedValueOnce(error);
@@ -102,6 +151,34 @@ describe("Trivia Service", () => {
             // Transaction should have started
             expect(connection.beginTransaction).toHaveBeenCalled();
 
+            // Verify the Trivia INSERT succeeded
+            expect(connection.query).toHaveBeenNthCalledWith(
+                1,
+                expect.stringContaining("INSERT INTO Trivia"),
+                [
+                    trivia.triviaID,
+                    trivia.triviaTitle,
+                    trivia.AdminName,
+                    trivia.Email,
+                    trivia.AdminToken,
+                    trivia.RoomCode
+                ]
+            );
+
+            // Verify the Question INSERT was attempted and failed
+            expect(connection.query).toHaveBeenNthCalledWith(
+                2,
+                expect.stringContaining("INSERT INTO Question"),
+                [
+                    trivia.questions[0].questionID,
+                    trivia.triviaID,
+                    trivia.questions[0].text
+                ]
+            );
+
+            // No further queries should execute
+            expect(connection.query).toHaveBeenCalledTimes(2);
+
             // Transaction should rollback
             expect(connection.rollback).toHaveBeenCalled();
 
@@ -110,7 +187,6 @@ describe("Trivia Service", () => {
 
             // Connection should still be released
             expect(connection.release).toHaveBeenCalled();
-
         });
 
     });
