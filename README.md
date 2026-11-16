@@ -8,6 +8,9 @@ I built a lightweight trivia website that lets anyone create a trivia game and i
 - Socket.IO for real time dashboard
 - Jest for automated testing
 
+# Database Design
+<img src="https://raw.githubusercontent.com/Leon21-Nkadimeng/Trivia/731372df8ccb750eb681386b55d5a319b01e8010/db_schema_draw_io/Trivia_DB_SVG.svg" />
+
 # Development notes
 The application's frontend layout and CSS styling where developed with assistance from Claude AI and ChatGPT. The application logic, database design, backend functionality, and testing were independetly implemented.
 
