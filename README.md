@@ -14,10 +14,3 @@ The application's frontend layout and CSS styling where developed with assistanc
 # Development Status
 The application has not yet been deployed.
 
-
-
-
-Please note.
-Layout and CSS styling for the UI were developed with the help of Claude AI and ChatGPT AI. All application logic, database design, and backend functionality were built independently.
-
-Quick system demo on YouTube: https://youtu.be/x_zs4uER-rY
