@@ -13,4 +13,5 @@ The application's frontend layout and CSS styling where developed with assistanc
 
 # Development Status
 The application has not yet been deployed.
+Testing is ongoing, and the current test suite does not yet cover the entire application.
 
