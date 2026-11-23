@@ -1,6 +1,9 @@
 const db = require("../config/database");
 
-
+/**
+ * Adds a trivia to the MySQL database using a connectinoo from the database connection pool.
+ * @param trivia The trivia we want to add to the database.
+ */
 async function addTrivia(trivia) {
   const connection = await db.getConnection();
 
@@ -36,17 +39,31 @@ async function addTrivia(trivia) {
 
 }
 
-
+/**
+ * gets a trivia using its room code enabling the customers to access a trivia by providing a room code.
+ * @param roomCode the room code of the trivia we want to retrieve.
+ * @returns a trivia and its questions
+ */
 async function getTriviaByRoomCode(roomCode) {
   const [trivia] = await db.query('SELECT * FROM Trivia WHERE RoomCode = ?', [roomCode]);
   return trivia;
 }
 
+/**
+ * gets a trivia (opened or closed) using an admin code.
+ * @param adminToken the admin token of the trivia we want to retrieve.
+ * @returns a trivia and its questions
+ */
 async function getTriviaByAdminToken(adminToken) {
   const [trivia] = await db.query('SELECT * FROM Trivia WHERE AdminToken = ?', [adminToken]);
   return trivia;
 }
 
+/**
+ * gets an available trivia using an room code.
+ * @param roomCode the room code of the trivia we want to retrieve.
+ * @returns a trivia and its questions
+ */
 async function getTriviaAvailableByRoomCode(roomCode) {
   const [trivia] = await db.query('SELECT * FROM Trivia WHERE RoomCode = ? AND Status ="Open"', [roomCode]);
   return trivia;
