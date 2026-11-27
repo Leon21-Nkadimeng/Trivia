@@ -667,7 +667,7 @@ const SQL = `
         test("should stop a known trivia", async () => {
             resolved[0].affectedRows = 1;
             resolved[0].changedRows = 1;
-            db.query.mockResolvedValue(resolved);
+            db.query.mockResolvedValueOnce(resolved);
             await stopTrivia(adminToken);
 
             expect(db.query).toHaveBeenNthCalledWith(

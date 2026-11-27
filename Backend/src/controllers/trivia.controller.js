@@ -40,7 +40,6 @@ async function addTrivia(req, res) {
 
 async function getTrivia(req, res) {
   try {
-    //console.log(req.params);
     const {RoomCode} = req.params;
 
 
@@ -48,24 +47,14 @@ async function getTrivia(req, res) {
 
     if(!trivia || trivia.length === 0)
       return res.status(404).json({message:"Trivia not found"});
-   // console.log(trivia[0].ID)
+
     const triviaQuestions = await triviaService.getTriviaQuestions(trivia[0].ID);
-    //console.log(triviaQuestions)
-/*
-    for(let i = 0; i < questions; i++) {
-      const [options] = await db.query(optionsQuery, [questions[i].questionID]);
-      questions[i] = {
-        ...questions[i], 
-        multipleAnswers: options.filter(o => o.IsCorrect === 1).length > 1, 
-        options: options.map(o => ({text: o.text, optionID: o.optionID}))
-      };
-    }
-*/
+
 
     for(let i = 0; i < triviaQuestions.length; i++) {
       const question = triviaQuestions[i];
       const options = await triviaService.getQuestionOptions(question.ID);
-      //console.log(options)
+
 
       triviaQuestions[i] = {
         ...question,
@@ -93,7 +82,7 @@ async function addAttempt(req, res) {
     const attempt = req.body;
 // todo: validate trivia id
     const answers = [];
-   // console.log(attempt)
+
     attempt.questions.forEach(question => {
       question.options.forEach(option => {
         if(option.selected)
@@ -110,8 +99,6 @@ async function addAttempt(req, res) {
     await triviaService.addAttempt(finalAttempt);
 
     const adminToken = await triviaService.getAdminToken(finalAttempt.TriviaID);
-    //console.log(finalAttempt.TriviaID)
-   // console.log(adminT)
    
     if(adminToken) {
       const io = getIO();
@@ -147,8 +134,7 @@ async function getTriviaForManagement(req, res) {
     const adminToken = req.params.adminToken.trim();
 
     const trivia = await triviaService.getTriviaDetailsForManagement(adminToken);
-  // console.log(trivia);
-  // console.log(adminToken)
+
     if(trivia.length === 0)
       return res.status(404).json({message:"Trivia not found"});
     const leaderBoard = await triviaService.getLeaderboard(adminToken);
