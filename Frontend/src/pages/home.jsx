@@ -45,8 +45,6 @@ function App() {
 
         {/* Hero */}
         <section className="hero-section">
-          <p className="hero-eyebrow">TRIVIA MADE SIMPLE</p>
-
           <h1>
             Think you know it all?
             <span> Prove it.</span>
